@@ -109,47 +109,47 @@ df_Securities.info()
 
 
 # Regression Algo
-# Filtering the Prices dataframe on a particular symbol for Google : GOOGL
-selected_symbol = ['GOOGL']
-df_Prices_GOOGL = df_Prices[df_Prices['symbol'].isin(selected_symbol)]
-df_Prices_GOOGL.info()
+# Filtering the Prices dataframe on a particular symbol for IBMe : IBM
+selected_symbol = ['IBM']
+df_Prices_IBM = df_Prices[df_Prices['symbol'].isin(selected_symbol)]
+df_Prices_IBM.info()
 
-df_Prices_GOOGL['date']= pd.to_datetime(df_Prices_GOOGL['date'])
+df_Prices_IBM['date']= pd.to_datetime(df_Prices_IBM['date'])
 
-print(df_Prices_GOOGL.dtypes)
+print(df_Prices_IBM.dtypes)
 
 # label_encoder object knows how to understand word labels.
 label_encoder = preprocessing.LabelEncoder()
 
 # Encoding Dates to be unique by passing Label_encoder
-df_Prices_GOOGL['date'] = label_encoder.fit_transform(df_Prices_GOOGL['date'])
-print(df_Prices_GOOGL['date'].unique())
-df_Prices_GOOGL['date'].apply(lambda x: float(x))
+df_Prices_IBM['date'] = label_encoder.fit_transform(df_Prices_IBM['date'])
+print(df_Prices_IBM['date'].unique())
+df_Prices_IBM['date'].apply(lambda x: float(x))
 
-df_Prices_GOOGL1 = df_Prices_GOOGL[['date','open','close','low','high','volume']]
+df_Prices_IBM1 = df_Prices_IBM[['date','open','close','low','high','volume']]
 print('---------Test New Name -------------------------')
-print(df_Prices_GOOGL1.head())
+print(df_Prices_IBM1.head())
 
 print('Printing the Co-Relation Matrix')
-corrMetrics = df_Prices_GOOGL1.corr()
+corrMetrics = df_Prices_IBM1.corr()
 print(corrMetrics)
 
 # Visualize the Correlation Heat map with Seaborn
 top_corr_features = corrMetrics.index
 plt.figure(figsize=(20,20))
-g = sns.heatmap(df_Prices_GOOGL1[top_corr_features].corr(), annot=True, cmap="RdYlGn")
+g = sns.heatmap(df_Prices_IBM1[top_corr_features].corr(), annot=True, cmap="RdYlGn")
 
 
 #With Co-relation metrics its evident that Volumn is least corelated with any other feature.
 
-X = df_Prices_GOOGL1.drop('volume', axis=1).values  # Feature
-y = df_Prices_GOOGL1['volume'].values  # Target
+X = df_Prices_IBM1.drop('volume', axis=1).values  # Feature
+y = df_Prices_IBM1['volume'].values  # Target
 
 # Train Test Split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Using Lasso for identifying most important predictor.
-names = df_Prices_GOOGL1.drop('volume', axis=1).columns
+names = df_Prices_IBM1.drop('volume', axis=1).columns
 lasso = Lasso(alpha=0.1)
 lasso_coef = lasso.fit(X, y).coef_
 _ = plt.plot(range(len(names)), lasso_coef)
